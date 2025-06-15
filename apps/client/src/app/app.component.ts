@@ -2,8 +2,12 @@ import { GfHoldingDetailDialogComponent } from '@ghostfolio/client/components/ho
 import { HoldingDetailDialogParams } from '@ghostfolio/client/components/holding-detail-dialog/interfaces/interfaces';
 import { getCssVariable } from '@ghostfolio/common/helper';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
-import { paths } from '@ghostfolio/common/paths';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import {
+  internalRoutes,
+  publicRoutes,
+  routes
+} from '@ghostfolio/common/routes/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
 
 import { DOCUMENT } from '@angular/common';
@@ -63,25 +67,23 @@ export class AppComponent implements OnDestroy, OnInit {
   public hasTabs = false;
   public info: InfoItem;
   public pageTitle: string;
-  public routerLinkAbout = ['/' + paths.about];
-  public routerLinkAboutChangelog = ['/' + paths.about, paths.changelog];
-  public routerLinkAboutLicense = ['/' + paths.about, paths.license];
-  public routerLinkAboutPrivacyPolicy = [
-    '/' + paths.about,
-    paths.privacyPolicy
-  ];
-  public routerLinkAboutTermsOfService = [
-    '/' + paths.about,
-    paths.termsOfService
-  ];
-  public routerLinkBlog = ['/' + paths.blog];
-  public routerLinkFaq = ['/' + paths.faq];
-  public routerLinkFeatures = ['/' + paths.features];
-  public routerLinkMarkets = ['/' + paths.markets];
-  public routerLinkOpenStartup = ['/' + paths.openStartup];
-  public routerLinkPricing = ['/' + paths.pricing];
-  public routerLinkRegister = ['/' + paths.register];
-  public routerLinkResources = ['/' + paths.resources];
+  public routerLinkAbout = publicRoutes.about.routerLink;
+  public routerLinkAboutChangelog =
+    publicRoutes.about.subRoutes.changelog.routerLink;
+  public routerLinkAboutLicense =
+    publicRoutes.about.subRoutes.license.routerLink;
+  public routerLinkAboutPrivacyPolicy =
+    publicRoutes.about.subRoutes.privacyPolicy.routerLink;
+  public routerLinkAboutTermsOfService =
+    publicRoutes.about.subRoutes.termsOfService.routerLink;
+  public routerLinkBlog = publicRoutes.blog.routerLink;
+  public routerLinkFaq = publicRoutes.faq.routerLink;
+  public routerLinkFeatures = publicRoutes.features.routerLink;
+  public routerLinkMarkets = publicRoutes.markets.routerLink;
+  public routerLinkOpenStartup = publicRoutes.openStartup.routerLink;
+  public routerLinkPricing = publicRoutes.pricing.routerLink;
+  public routerLinkRegister = publicRoutes.register.routerLink;
+  public routerLinkResources = publicRoutes.resources.routerLink;
   public showFooter = false;
   public user: User;
 
@@ -160,12 +162,14 @@ export class AppComponent implements OnDestroy, OnInit {
         this.currentSubRoute = urlSegments[1]?.path;
 
         if (
-          (this.currentRoute === 'home' && !this.currentSubRoute) ||
-          (this.currentRoute === 'home' &&
-            this.currentSubRoute === 'holdings') ||
-          (this.currentRoute === 'portfolio' && !this.currentSubRoute) ||
-          (this.currentRoute === 'zen' && !this.currentSubRoute) ||
-          (this.currentRoute === 'zen' && this.currentSubRoute === 'holdings')
+          ((this.currentRoute === internalRoutes.home.path &&
+            !this.currentSubRoute) ||
+            (this.currentRoute === internalRoutes.home.path &&
+              this.currentSubRoute ===
+                internalRoutes.home.subRoutes.holdings.path) ||
+            (this.currentRoute === internalRoutes.portfolio.path &&
+              !this.currentSubRoute)) &&
+          this.user?.settings?.viewMode !== 'ZEN'
         ) {
           this.hasPermissionToChangeDateRange = true;
         } else {
@@ -173,14 +177,20 @@ export class AppComponent implements OnDestroy, OnInit {
         }
 
         if (
-          (this.currentRoute === 'home' &&
-            this.currentSubRoute === 'holdings') ||
-          (this.currentRoute === 'portfolio' && !this.currentSubRoute) ||
-          (this.currentRoute === 'portfolio' &&
-            this.currentSubRoute === 'activities') ||
-          (this.currentRoute === 'portfolio' &&
-            this.currentSubRoute === 'allocations') ||
-          (this.currentRoute === 'zen' && this.currentSubRoute === 'holdings')
+          (this.currentRoute === internalRoutes.home.path &&
+            this.currentSubRoute ===
+              internalRoutes.home.subRoutes.holdings.path) ||
+          (this.currentRoute === internalRoutes.portfolio.path &&
+            !this.currentSubRoute) ||
+          (this.currentRoute === internalRoutes.portfolio.path &&
+            this.currentSubRoute ===
+              internalRoutes.portfolio.subRoutes.activities.path) ||
+          (this.currentRoute === internalRoutes.portfolio.path &&
+            this.currentSubRoute ===
+              internalRoutes.portfolio.subRoutes.allocations.path) ||
+          (this.currentRoute === internalRoutes.zen.path &&
+            this.currentSubRoute ===
+              internalRoutes.home.subRoutes.holdings.path)
         ) {
           this.hasPermissionToChangeFilters = true;
         } else {
@@ -188,25 +198,25 @@ export class AppComponent implements OnDestroy, OnInit {
         }
 
         this.hasTabs =
-          (this.currentRoute === this.routerLinkAbout[0].slice(1) ||
-            this.currentRoute === this.routerLinkFaq[0].slice(1) ||
-            this.currentRoute === this.routerLinkResources[0].slice(1) ||
-            this.currentRoute === 'account' ||
-            this.currentRoute === 'admin' ||
-            this.currentRoute === 'home' ||
-            this.currentRoute === 'portfolio' ||
-            this.currentRoute === 'zen') &&
+          (this.currentRoute === publicRoutes.about.path ||
+            this.currentRoute === publicRoutes.faq.path ||
+            this.currentRoute === publicRoutes.resources.path ||
+            this.currentRoute === internalRoutes.account.path ||
+            this.currentRoute === internalRoutes.adminControl.path ||
+            this.currentRoute === internalRoutes.home.path ||
+            this.currentRoute === internalRoutes.portfolio.path ||
+            this.currentRoute === internalRoutes.zen.path) &&
           this.deviceType !== 'mobile';
 
         this.showFooter =
-          (this.currentRoute === 'blog' ||
-            this.currentRoute === this.routerLinkFeatures[0].slice(1) ||
-            this.currentRoute === this.routerLinkMarkets[0].slice(1) ||
-            this.currentRoute === 'open' ||
-            this.currentRoute === 'p' ||
-            this.currentRoute === this.routerLinkPricing[0].slice(1) ||
-            this.currentRoute === this.routerLinkRegister[0].slice(1) ||
-            this.currentRoute === 'start') &&
+          (this.currentRoute === publicRoutes.blog.path ||
+            this.currentRoute === publicRoutes.features.path ||
+            this.currentRoute === publicRoutes.markets.path ||
+            this.currentRoute === publicRoutes.openStartup.path ||
+            this.currentRoute === routes.public ||
+            this.currentRoute === publicRoutes.pricing.path ||
+            this.currentRoute === publicRoutes.register.path ||
+            this.currentRoute === publicRoutes.start.path) &&
           this.deviceType !== 'mobile';
 
         if (this.deviceType === 'mobile') {

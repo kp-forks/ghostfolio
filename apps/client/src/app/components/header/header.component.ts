@@ -11,8 +11,12 @@ import {
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Filter, InfoItem, User } from '@ghostfolio/common/interfaces';
-import { paths } from '@ghostfolio/common/paths';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import {
+  internalRoutes,
+  publicRoutes,
+  routes
+} from '@ghostfolio/common/routes/routes';
 import { DateRange } from '@ghostfolio/common/types';
 import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
 
@@ -79,23 +83,24 @@ export class HeaderComponent implements OnChanges {
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public hasPermissionToCreateUser: boolean;
   public impersonationId: string;
+  public internalRoutes = internalRoutes;
   public isMenuOpen: boolean;
-  public paths = paths;
-  public routeAbout = paths.about;
-  public routeFeatures = paths.features;
-  public routeMarkets = paths.markets;
-  public routePricing = paths.pricing;
-  public routeResources = paths.resources;
-  public routerLinkAbout = ['/' + paths.about];
-  public routerLinkAccount = ['/' + paths.account];
-  public routerLinkAccounts = ['/' + paths.accounts];
-  public routerLinkAdminControl = ['/' + paths.adminControl];
-  public routerLinkFeatures = ['/' + paths.features];
-  public routerLinkMarkets = ['/' + paths.markets];
-  public routerLinkPortfolio = ['/' + paths.portfolio];
-  public routerLinkPricing = ['/' + paths.pricing];
-  public routerLinkRegister = ['/' + paths.register];
-  public routerLinkResources = ['/' + paths.resources];
+  public routeAbout = publicRoutes.about.path;
+  public routeFeatures = publicRoutes.features.path;
+  public routeMarkets = publicRoutes.markets.path;
+  public routePricing = publicRoutes.pricing.path;
+  public routeResources = publicRoutes.resources.path;
+  public routerLinkAbout = publicRoutes.about.routerLink;
+  public routerLinkAccount = internalRoutes.account.routerLink;
+  public routerLinkAccounts = internalRoutes.accounts.routerLink;
+  public routerLinkAdminControl = internalRoutes.adminControl.routerLink;
+  public routerLinkFeatures = publicRoutes.features.routerLink;
+  public routerLinkMarkets = publicRoutes.markets.routerLink;
+  public routerLinkPortfolio = internalRoutes.portfolio.routerLink;
+  public routerLinkPricing = publicRoutes.pricing.routerLink;
+  public routerLinkRegister = publicRoutes.register.routerLink;
+  public routerLinkResources = publicRoutes.resources.routerLink;
+  public routes = routes;
 
   private unsubscribeSubject = new Subject<void>();
 
