@@ -1,4 +1,4 @@
-import { paths } from '@ghostfolio/common/paths';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +11,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './ghostfolio-joins-oss-friends-page.html'
 })
 export class GhostfolioJoinsOssFriendsPageComponent {
-  public routerLinkAboutOssFriends = ['/' + paths.about, paths.ossFriends];
-  public routerLinkBlog = ['/' + paths.blog];
+  public routerLinkAboutOssFriends =
+    publicRoutes.about.subRoutes.ossFriends.routerLink;
+  public routerLinkBlog = publicRoutes.blog.routerLink;
 }

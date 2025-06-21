@@ -5,6 +5,151 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.173.0 - 2025-06-21
+
+### Added
+
+- Set up `open-color` for CSS variable usage
+
+### Changed
+
+- Simplified the data providers management of the admin control panel
+- Migrated the `@ghostfolio/ui/assistant` component to control flow
+- Migrated the `@ghostfolio/ui/value` component to control flow
+- Renamed `GranteeUser` to `granteeUser` in the `Access` database schema
+- Improved the language localization for French (`fr`)
+- Improved the language localization for German (`de`)
+- Upgraded `class-validator` from version `0.14.1` to `0.14.2`
+- Upgraded `prisma` from version `6.9.0` to `6.10.1`
+
+### Fixed
+
+- Fixed an issue in the `HtmlTemplateMiddleware` related to incorrect variable resolution
+- Eliminated the _Unsupported route path_ warning of the `LegacyRouteConverter` on startup
+
+## 2.172.0 - 2025-06-19
+
+### Added
+
+- Set up the language localization for the static portfolio analysis rule: _Account Cluster Risks_ (Single Account)
+- Included the admin control panel in the quick links of the assistant
+
+### Changed
+
+- Adapted the options of the date range selector in the assistant dynamically based on the user’s first activity
+- Switched the data provider service to `OnModuleInit`, ensuring (currency) quotes are fetched only once
+- Migrated the `@ghostfolio/ui/assistant` component to control flow
+- Migrated the `@ghostfolio/ui/value` component to control flow
+- Improved the language localization for Chinese (`zh`)
+- Improved the language localization for Español (`es`)
+- Improved the language localization for German (`de`)
+- Improved the language localization for Portuguese (`pt`)
+
+## 2.171.0 - 2025-06-15
+
+### Added
+
+- Added the current holdings as default options of the symbol search in the create or update activity dialog
+
+### Changed
+
+- Improved the style of the assistant
+- Reused the value component in the data providers management of the admin control panel
+- Set the market state of exchange rate symbols to `open` in the _Financial Modeling Prep_ service
+- Restructured the content of the pricing page
+- Migrated the `@ghostfolio/ui/assistant` component to control flow
+- Migrated the `@ghostfolio/ui/value` component to control flow
+- Migrated the `HtmlTemplateMiddleware` to use `@Injectable()`
+- Renamed `User` to `user` in the database schema
+- Improved the language localization for Catalan (`ca`)
+- Improved the language localization for Español (`es`)
+- Improved the language localization for French (`fr`)
+- Improved the language localization for German (`de`)
+- Improved the language localization for Italian (`it`)
+- Improved the language localization for Polish (`pl`)
+- Improved the language localization for Portuguese (`pt`)
+- Improved the language localization for Turkish (`tr`)
+- Upgraded the _Stripe_ dependencies
+
+### Fixed
+
+- Fixed a date offset issue with account balances
+- Fixed missing `/.well-known/assetlinks.json` for TWA
+
+## 2.170.0 - 2025-06-11
+
+### Added
+
+- Included quick links in the search results of the assistant
+- Added a skeleton loader to the changelog page
+- Extended the content of the _Self-Hosting_ section by information about additional data providers on the Frequently Asked Questions (FAQ) page
+
+### Changed
+
+- Renamed `ApiKey` to `apiKeys` in the `User` database schema
+- Improved the language localization for French (`fr`)
+- Improved the language localization for Portuguese (`pt`)
+- Upgraded `@keyv/redis` from version `4.3.4` to `4.4.0`
+- Upgraded `prisma` from version `6.8.2` to `6.9.0`
+- Upgraded `zone.js` from version `0.15.0` to `0.15.1`
+
+### Fixed
+
+- Restricted the date range change permission in the _Zen Mode_
+
+## 2.169.0 - 2025-06-08
+
+### Changed
+
+- Renamed the asset profile icon component to entity logo component and moved to `@ghostfolio/ui`
+- Renamed `Account` to `accounts` in the `User` database schema
+- Improved the cache verification in the health check endpoint (experimental)
+- Improved the language localization for Catalan (`ca`)
+- Improved the language localization for French (`fr`)
+- Improved the language localization for Polish (`pl`)
+
+### Fixed
+
+- Handled an exception in the get keys function of the _Redis_ cache service
+- Fixed missing `/.well-known/assetlinks.json` for TWA
+
+## 2.168.0 - 2025-06-07
+
+### Added
+
+- Added a background gradient to the sidebar navigation
+
+### Changed
+
+- Migrated the `i18n` service to use `@Injectable()`
+- Improved the language localization for German (`de`)
+- Upgraded `nestjs` from version `11.1.0` to `11.1.3`
+
+## 2.167.0 - 2025-06-07
+
+### Added
+
+- Added support for column sorting to the markets overview
+- Added support for column sorting to the watchlist
+- Set up the language localization for the static portfolio analysis rule: _Emergency Fund_ (Setup)
+- Set up the language localization for the static portfolio analysis rule: _Fees_ (Fee Ratio)
+
+### Changed
+
+- Extended the symbol search component by default options
+- Renamed `Tag` to `tags` in the `User` database schema
+- Improved the language localization for German (`de`)
+- Improved the language localization for Spanish (`es`)
+- Improved the language localization for Turkish (`tr`)
+- Upgraded `ng-extract-i18n-merge` from version `2.15.0` to `2.15.1`
+- Upgraded `Nx` from version `20.8.1` to `21.1.2`
+
+### Fixed
+
+- Fixed an issue where the import button was not correctly enabled in the import activities dialog
+- Fixed an issue with empty account balances in the import activities dialog
+- Fixed an issue in the annualized performance calculation
+
 ## 2.166.0 - 2025-06-05
 
 ### Added
