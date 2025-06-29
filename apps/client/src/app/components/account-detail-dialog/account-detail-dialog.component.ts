@@ -9,8 +9,8 @@ import {
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
-import { paths } from '@ghostfolio/common/paths';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
 import {
@@ -93,9 +93,12 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   }
 
   public onCloneActivity(aActivity: Activity) {
-    this.router.navigate(['/' + paths.portfolio, paths.activities], {
-      queryParams: { activityId: aActivity.id, createDialog: true }
-    });
+    this.router.navigate(
+      internalRoutes.portfolio.subRoutes.activities.routerLink,
+      {
+        queryParams: { activityId: aActivity.id, createDialog: true }
+      }
+    );
 
     this.dialogRef.close();
   }
@@ -152,9 +155,12 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   }
 
   public onUpdateActivity(aActivity: Activity) {
-    this.router.navigate(['/' + paths.portfolio, paths.activities], {
-      queryParams: { activityId: aActivity.id, editDialog: true }
-    });
+    this.router.navigate(
+      internalRoutes.portfolio.subRoutes.activities.routerLink,
+      {
+        queryParams: { activityId: aActivity.id, editDialog: true }
+      }
+    );
 
     this.dialogRef.close();
   }
@@ -168,7 +174,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
           balance,
           currency,
           name,
-          Platform,
+          platform,
           transactionCount,
           value,
           valueInBaseCurrency
@@ -183,7 +189,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
           }
 
           this.name = name;
-          this.platformName = Platform?.name ?? '-';
+          this.platformName = platform?.name ?? '-';
           this.transactionCount = transactionCount;
           this.valueInBaseCurrency = valueInBaseCurrency;
 

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -9,12 +10,13 @@ import { DataSource } from '@prisma/client';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  selector: 'gf-asset-profile-icon',
-  styleUrls: ['./asset-profile-icon.component.scss'],
-  templateUrl: './asset-profile-icon.component.html'
+  selector: 'gf-entity-logo',
+  styleUrls: ['./entity-logo.component.scss'],
+  templateUrl: './entity-logo.component.html'
 })
-export class GfAssetProfileIconComponent implements OnChanges {
+export class GfEntityLogoComponent implements OnChanges {
   @Input() dataSource: DataSource;
   @Input() size: 'large';
   @Input() symbol: string;

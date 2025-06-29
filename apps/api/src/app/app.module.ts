@@ -1,8 +1,10 @@
 import { EventsModule } from '@ghostfolio/api/events/events.module';
+import { HtmlTemplateMiddleware } from '@ghostfolio/api/middlewares/html-template.middleware';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { CronModule } from '@ghostfolio/api/services/cron/cron.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
+import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
@@ -13,7 +15,7 @@ import {
 } from '@ghostfolio/common/config';
 
 import { BullModule } from '@nestjs/bull';
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -36,6 +38,7 @@ import { BenchmarksModule } from './endpoints/benchmarks/benchmarks.module';
 import { GhostfolioModule } from './endpoints/data-providers/ghostfolio/ghostfolio.module';
 import { MarketDataModule } from './endpoints/market-data/market-data.module';
 import { PublicModule } from './endpoints/public/public.module';
+import { SitemapModule } from './endpoints/sitemap/sitemap.module';
 import { TagsModule } from './endpoints/tags/tags.module';
 import { WatchlistModule } from './endpoints/watchlist/watchlist.module';
 import { ExchangeRateModule } from './exchange-rate/exchange-rate.module';
@@ -48,7 +51,6 @@ import { OrderModule } from './order/order.module';
 import { PlatformModule } from './platform/platform.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { RedisCacheModule } from './redis-cache/redis-cache.module';
-import { SitemapModule } from './sitemap/sitemap.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { SymbolModule } from './symbol/symbol.module';
 import { UserModule } from './user/user.module';
@@ -101,7 +103,7 @@ import { UserModule } from './user/user.module';
     RedisCacheModule,
     ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
-      exclude: ['/api/*wildcard', '/sitemap.xml'],
+      exclude: ['/.well-known/*wildcard', '/api/*wildcard', '/sitemap.xml'],
       rootPath: join(__dirname, '..', 'client'),
       serveStaticOptions: {
         setHeaders: (res) => {
@@ -124,12 +126,21 @@ import { UserModule } from './user/user.module';
         }
       }
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client', '.well-known'),
+      serveRoot: '/.well-known'
+    }),
     SitemapModule,
     SubscriptionModule,
     SymbolModule,
     TagsModule,
     UserModule,
     WatchlistModule
-  ]
+  ],
+  providers: [I18nService]
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  public configure(consumer: MiddlewareConsumer) {
+    consumer.apply(HtmlTemplateMiddleware).forRoutes('*wildcard');
+  }
+}

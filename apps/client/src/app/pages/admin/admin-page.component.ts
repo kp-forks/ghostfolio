@@ -1,5 +1,5 @@
 import { TabConfiguration } from '@ghostfolio/common/interfaces';
-import { paths } from '@ghostfolio/common/paths';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -27,27 +27,31 @@ export class AdminPageComponent implements OnDestroy, OnInit {
       {
         iconName: 'reader-outline',
         label: $localize`Overview`,
-        path: ['/' + paths.adminControl]
+        routerLink: internalRoutes.adminControl.routerLink
       },
       {
         iconName: 'settings-outline',
-        label: $localize`Settings`,
-        path: ['/' + paths.adminControl, paths.settings]
+        label:
+          internalRoutes.adminControl.subRoutes.settings.title +
+          '<span class="badge badge-pill badge-secondary ml-2 text-uppercase">' +
+          $localize`new` +
+          '</span>',
+        routerLink: internalRoutes.adminControl.subRoutes.settings.routerLink
       },
       {
         iconName: 'server-outline',
-        label: $localize`Market Data`,
-        path: ['/' + paths.adminControl, paths.marketData]
+        label: internalRoutes.adminControl.subRoutes.marketData.title,
+        routerLink: internalRoutes.adminControl.subRoutes.marketData.routerLink
       },
       {
         iconName: 'flash-outline',
-        label: $localize`Job Queue`,
-        path: ['/' + paths.adminControl, paths.jobs]
+        label: internalRoutes.adminControl.subRoutes.jobs.title,
+        routerLink: internalRoutes.adminControl.subRoutes.jobs.routerLink
       },
       {
         iconName: 'people-outline',
-        label: $localize`Users`,
-        path: ['/' + paths.adminControl, paths.users]
+        label: internalRoutes.adminControl.subRoutes.users.title,
+        routerLink: internalRoutes.adminControl.subRoutes.users.routerLink
       }
     ];
   }

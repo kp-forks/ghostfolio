@@ -52,11 +52,10 @@ import { sortBy, without } from 'lodash';
 
 @Injectable()
 export class UserService {
-  private i18nService = new I18nService();
-
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly eventEmitter: EventEmitter2,
+    private readonly i18nService: I18nService,
     private readonly orderService: OrderService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
@@ -96,16 +95,16 @@ export class UserService {
   }
 
   public async getUser(
-    { Account, id, permissions, Settings, subscription }: UserWithSettings,
+    { accounts, id, permissions, Settings, subscription }: UserWithSettings,
     aLocale = locale
   ): Promise<IUser> {
     const userData = await Promise.all([
       this.prismaService.access.findMany({
         include: {
-          User: true
+          user: true
         },
         orderBy: { alias: 'asc' },
-        where: { GranteeUser: { id } }
+        where: { granteeUserId: id }
       }),
       this.prismaService.order.count({
         where: { userId: id }
@@ -142,6 +141,7 @@ export class UserService {
     }
 
     return {
+      accounts,
       activitiesCount,
       id,
       permissions,
@@ -155,7 +155,6 @@ export class UserService {
           permissions: accessItem.permissions
         };
       }),
-      accounts: Account,
       dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
         ...(Settings.settings as UserSettings),
@@ -182,8 +181,8 @@ export class UserService {
     const {
       Access,
       accessToken,
-      Account,
-      Analytics,
+      accounts,
+      analytics,
       authChallenge,
       createdAt,
       id,
@@ -196,10 +195,10 @@ export class UserService {
     } = await this.prismaService.user.findUnique({
       include: {
         Access: true,
-        Account: {
-          include: { Platform: true }
+        accounts: {
+          include: { platform: true }
         },
-        Analytics: true,
+        analytics: true,
         Settings: true,
         subscriptions: true
       },
@@ -209,7 +208,7 @@ export class UserService {
     const user: UserWithSettings = {
       Access,
       accessToken,
-      Account,
+      accounts,
       authChallenge,
       createdAt,
       id,
@@ -218,9 +217,9 @@ export class UserService {
       Settings: Settings as UserWithSettings['Settings'],
       thirdPartyId,
       updatedAt,
-      activityCount: Analytics?.activityCount,
+      activityCount: analytics?.activityCount,
       dataProviderGhostfolioDailyRequests:
-        Analytics?.dataProviderGhostfolioDailyRequests
+        analytics?.dataProviderGhostfolioDailyRequests
     };
 
     if (user?.Settings) {
@@ -260,28 +259,41 @@ export class UserService {
 
     (user.Settings.settings as UserSettings).xRayRules = {
       AccountClusterRiskCurrentInvestment:
-        new AccountClusterRiskCurrentInvestment(undefined, {}).getSettings(
-          user.Settings.settings
-        ),
+        new AccountClusterRiskCurrentInvestment(
+          undefined,
+          undefined,
+          undefined,
+          {}
+        ).getSettings(user.Settings.settings),
       AccountClusterRiskSingleAccount: new AccountClusterRiskSingleAccount(
+        undefined,
+        undefined,
         undefined,
         {}
       ).getSettings(user.Settings.settings),
       AssetClassClusterRiskEquity: new AssetClassClusterRiskEquity(
         undefined,
+        undefined,
+        undefined,
         undefined
       ).getSettings(user.Settings.settings),
       AssetClassClusterRiskFixedIncome: new AssetClassClusterRiskFixedIncome(
+        undefined,
+        undefined,
         undefined,
         undefined
       ).getSettings(user.Settings.settings),
       CurrencyClusterRiskBaseCurrencyCurrentInvestment:
         new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
           undefined,
+          undefined,
+          undefined,
           undefined
         ).getSettings(user.Settings.settings),
       CurrencyClusterRiskCurrentInvestment:
         new CurrencyClusterRiskCurrentInvestment(
+          undefined,
+          undefined,
           undefined,
           undefined
         ).getSettings(user.Settings.settings),
@@ -299,9 +311,13 @@ export class UserService {
         ).getSettings(user.Settings.settings),
       EmergencyFundSetup: new EmergencyFundSetup(
         undefined,
+        undefined,
+        undefined,
         undefined
       ).getSettings(user.Settings.settings),
       FeeRatioInitialInvestment: new FeeRatioInitialInvestment(
+        undefined,
+        undefined,
         undefined,
         undefined,
         undefined
@@ -338,6 +354,11 @@ export class UserService {
 
     let currentPermissions = getPermissions(user.role);
 
+    if (user.provider === 'ANONYMOUS') {
+      currentPermissions.push(permissions.deleteOwnUser);
+      currentPermissions.push(permissions.updateOwnAccessToken);
+    }
+
     if (!(user.Settings.settings as UserSettings).isExperimentalFeatures) {
       // currentPermissions = without(
       //   currentPermissions,
@@ -372,7 +393,7 @@ export class UserService {
           frequency = 6;
         }
 
-        if (Analytics?.activityCount % frequency === 1) {
+        if (analytics?.activityCount % frequency === 1) {
           currentPermissions.push(permissions.enableSubscriptionInterstitial);
         }
 
@@ -441,7 +462,7 @@ export class UserService {
       currentPermissions.push(permissions.impersonateAllUsers);
     }
 
-    user.Account = sortBy(user.Account, ({ name }) => {
+    user.accounts = sortBy(user.accounts, ({ name }) => {
       return name.toLowerCase();
     });
     user.permissions = currentPermissions.sort();
@@ -478,7 +499,7 @@ export class UserService {
     const user = await this.prismaService.user.create({
       data: {
         ...data,
-        Account: {
+        accounts: {
           create: {
             currency: DEFAULT_CURRENCY,
             name: this.i18nService.getTranslation({
@@ -500,7 +521,7 @@ export class UserService {
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       await this.prismaService.analytics.create({
         data: {
-          User: { connect: { id: user.id } }
+          user: { connect: { id: user.id } }
         }
       });
     }
@@ -595,7 +616,7 @@ export class UserService {
     const { settings } = await this.prismaService.settings.upsert({
       create: {
         settings: userSettings as unknown as Prisma.JsonObject,
-        User: {
+        user: {
           connect: {
             id: userId
           }

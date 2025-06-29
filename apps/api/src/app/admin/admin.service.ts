@@ -648,7 +648,7 @@ export class AdminService {
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       where = {
         NOT: {
-          Analytics: null
+          analytics: null
         }
       };
     }
@@ -674,7 +674,7 @@ export class AdminService {
                         select: {
                           activities: {
                             where: {
-                              User: {
+                              user: {
                                 subscriptions: {
                                   some: {
                                     expiresAt: {
@@ -806,13 +806,13 @@ export class AdminService {
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       orderBy = {
-        Analytics: {
+        analytics: {
           lastRequestAt: 'desc'
         }
       };
       where = {
         NOT: {
-          Analytics: null
+          analytics: null
         }
       };
     }
@@ -824,9 +824,9 @@ export class AdminService {
       where,
       select: {
         _count: {
-          select: { Account: true, activities: true }
+          select: { accounts: true, activities: true }
         },
-        Analytics: {
+        analytics: {
           select: {
             activityCount: true,
             country: true,
@@ -852,11 +852,11 @@ export class AdminService {
     });
 
     return usersWithAnalytics.map(
-      ({ _count, Analytics, createdAt, id, role, subscriptions }) => {
+      ({ _count, analytics, createdAt, id, role, subscriptions }) => {
         const daysSinceRegistration =
           differenceInDays(new Date(), createdAt) + 1;
-        const engagement = Analytics
-          ? Analytics.activityCount / daysSinceRegistration
+        const engagement = analytics
+          ? analytics.activityCount / daysSinceRegistration
           : undefined;
 
         const subscription =
@@ -871,11 +871,11 @@ export class AdminService {
           id,
           role,
           subscription,
-          accountCount: _count.Account || 0,
+          accountCount: _count.accounts || 0,
           activityCount: _count.activities || 0,
-          country: Analytics?.country,
-          dailyApiRequests: Analytics?.dataProviderGhostfolioDailyRequests || 0,
-          lastActivity: Analytics?.updatedAt
+          country: analytics?.country,
+          dailyApiRequests: analytics?.dataProviderGhostfolioDailyRequests || 0,
+          lastActivity: analytics?.updatedAt
         };
       }
     );
