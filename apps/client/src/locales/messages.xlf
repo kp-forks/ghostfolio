@@ -1326,7 +1326,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.ts</context>
-          <context context-type="linenumber">281</context>
+          <context context-type="linenumber">279</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/login-with-access-token-dialog/login-with-access-token-dialog.html</context>
@@ -1345,7 +1345,7 @@
         <source>Oops! Incorrect Security Token.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.ts</context>
-          <context context-type="linenumber">296</context>
+          <context context-type="linenumber">294</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.component.ts</context>
