@@ -4941,7 +4941,7 @@
         <target state="translated">정말로 이 계정 잔액을 삭제하시겠습니까?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/account-balances/account-balances.component.ts</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">113</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5388209493122807655" datatype="html">
